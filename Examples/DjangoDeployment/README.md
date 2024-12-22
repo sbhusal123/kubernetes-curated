@@ -70,3 +70,12 @@ kubectl apply -f celery-cipservice.yaml
 kubectl apply -f django-cipservice.yaml
 kubectl apply -f redis-postres-cip-service.yaml
 ```
+
+**Horizontal Pod AutoScaller:**
+
+- [HPA for Celery And Django Pods](./hpa.yaml)
+
+Adds up more pods when the CPU utilization of Celery or Django application reaches more than 70%.
+
+Min Replicas: 3
+Max Replicas: 10
