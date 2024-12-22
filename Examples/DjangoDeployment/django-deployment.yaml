@@ -29,3 +29,15 @@ spec:
               key: DATABASE_PASSWORD
         ports:
         - containerPort: 8000
+        volumeMounts:
+        - name: static-volume
+          mountPath: /app/static
+        - name: media-volume
+          mountPath: /app/media
+      volumes:
+      - name: static-volume
+        persistentVolumeClaim:
+          claimName: pvc-static
+      - name: media-volume
+        persistentVolumeClaim:
+          claimName: pvc-media

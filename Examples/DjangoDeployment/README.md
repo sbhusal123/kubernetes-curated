@@ -23,6 +23,19 @@ kubectl apply -f secrets.yaml
 
 **Volumes for Media And StaticFiles**
 
+- [Persistent Volume for Static And Media](./pv-static-media.yaml)
+
+- [Persistent Volumand And Persistent Volume Claim for Redis](./pvc-static-media.yaml)
+
+```sh
+kubectl apply -f pv-static-media.yaml
+
+kubectl apply -f pvc-static-media.yaml
+```
+
+
+**Volumes for Databases:**
+
 - [Persistent Volumand And Persistent Volume Claim for Postgres](./pvc-postgres.yaml)
 
 - [Persistent Volumand And Persistent Volume Claim for Redis](./pvc-redis.yaml)
