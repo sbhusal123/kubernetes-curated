@@ -1,5 +1,7 @@
 # Django Deployment With:
 
+**Note: this configuration is untested.**
+
 
 **1. Namespace:**
 
