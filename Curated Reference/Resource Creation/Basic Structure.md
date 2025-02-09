@@ -20,3 +20,6 @@ spec:
 - **metadata:** Contains information like the name, labels, and annotations of the resource.
 
 - **spec:** Contains the desired state of the resource, like the container specs, replica count, etc.
+
+Note: Use ReplicaSets for stateful applications like database, Deployments for stateless applications like WebApplication, a runtime for code.
+
