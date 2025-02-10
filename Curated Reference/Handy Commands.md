@@ -1,6 +1,15 @@
 # Kubernetes (kubectl) Commands:
 
-Note: By Default if ``-n`` flag is not used, it shows a resource from default namespace. 
+Note: By Default if ``-n`` flag is not used, it shows a resource from default namespace.
+
+**Summary:**
+- ``kubectl get <resource>`` to list resources, use ``-o wide`` for extra infos about resource.
+- ``kubectl describe <resource>``
+- ``kubectl <apply/delete/create> -f <file.yaml>``
+- ``kubectl logs -f <pod_name> -n <namespace>`` 
+- ``kubectl exec -it <pod_name> -n <namespace> -- /bin/sh``
+
+> Resource can be "pods/nodes/pv/deployments/replicasets/svc"
 
 ## Basic Commands
 ```sh
