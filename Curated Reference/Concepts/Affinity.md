@@ -3,7 +3,7 @@
 - A way to control how Pods are scheduled.
 - Allows to express preferences or requirements about where a Pod should (or should not) run, based on labels assigned to nodes or other pods.
 
-## Basic Idea:
+## 1. Basic Idea:
 
 **Say you have three nodes:**
 - node-A
@@ -44,10 +44,9 @@ So here, node-A already has a frontend pod → skip.
 Kubernetes considers other nodes (node-B, node-C) for scheduling.
 
 
+## 2. Two Types
 
-## Two Types
-
-### 🔷 1. Node Affinity (for Nodes)
+### 🔷 i. Node Affinity (for Nodes)
 
 -  Controls which nodes a pod can be scheduled on, based on node labels.
 
@@ -76,7 +75,7 @@ affinity:
 ---
 
 
-### 🔷 2. Pod Affinity & Anti-Affinity (for other Pods)
+### 🔷 ii. Pod Affinity & Anti-Affinity (for other Pods)
 
 > "Other node" simply means a different node than the one currently being evaluated.
 
@@ -118,7 +117,7 @@ affinity:
 This will not schedule this pod on a node that already has a pod with app=frontend.
 
 
-## 🔧 Topology Key
+## 3. 🔧 Topology Key
 
 - ``topologyKey`` defines the domain across which the rule applies.
     - kubernetes.io/hostname: **per node**
