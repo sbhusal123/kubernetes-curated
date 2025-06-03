@@ -1,123 +1,57 @@
-# 🐳 Minikube Logging Stack: Install Promtail, Loki, and Grafana with Helm
+# ✅ Step-by-Step Fresh Installation
 
-This guide walks you through setting up **Promtail**, **Loki**, and **Grafana** on a **Minikube** cluster using **Helm**.
+## 🧰 Prerequisites
+Make sure you have:
 
----
+- `kubectl` configured to point to your cluster  
+- `helm` installed (`helm version` to check)
 
-## ✅ Prerequisites
-
-Make sure the following are set up:
-
-- **Minikube** running:
-  ```bash
-  minikube start
-  ```
-
-- **Helm** installed:
-  ```bash
-  helm version
-  ```
-
----
-
-## 🔧 Step 1: Add Helm Repositories
-
-Add the Grafana Helm chart repository and update:
-
+## 📦 1. Add the Prometheus Helm repo
 ```bash
-helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
 
----
-
-## 📦 Step 2: Install Loki (Log Aggregator)
-
-Install Loki (without Promtail for now):
-
+## 📁 2. Create a monitoring namespace
 ```bash
-helm upgrade --install loki grafana/loki-stack \
-  --namespace monitoring --create-namespace \
-  --set promtail.enabled=false
+kubectl create namespace monitoring
 ```
 
----
-
-## 📦 Step 3: Install Promtail (Log Collector)
-
-Install Promtail to collect logs from the cluster and send them to Loki:
-
+## 🚀 3. Install kube-prometheus-stack
 ```bash
-helm upgrade --install promtail grafana/promtail \
-  --namespace monitoring \
-  --set "loki.serviceName=loki"
+helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
 ```
 
----
+This installs:
 
-## 📊 Step 4: Install Grafana (Visualization UI)
+- Prometheus Operator  
+- Prometheus  
+- Grafana  
+- Alertmanager  
+- Node Exporter  
+- Kube State Metrics
 
-Install Grafana to view logs stored in Loki:
-
+## 🔍 4. Check installed pods
 ```bash
-helm upgrade --install grafana grafana/grafana \
-  --namespace monitoring \
-  --set adminPassword='admin' \
-  --set service.type=NodePort
+kubectl get pods -n monitoring
 ```
 
-Expose Grafana on a local port:
+Wait until all pods show `Running` or `Completed`.
 
+## 🌐 5. Access Grafana
+Grafana is installed as a service. To access it:
+
+### Port forward
 ```bash
-minikube service grafana -n monitoring
+kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
 ```
 
-This will open Grafana in your browser.
+Then open: http://localhost:3000
 
----
+**Default credentials:**
 
-## 🔧 Step 5: Access Grafana
-
-Default login:
 - **Username:** `admin`
-- **Password:** `admin` (or whatever you set with `--set adminPassword`)
-
----
-
-## ➕ Step 6: Add Loki as a Data Source in Grafana
-
-1. In Grafana UI:
-   - Go to **Settings → Data Sources → Add data source**
-   - Choose **Loki**
-   - URL: `http://loki.monitoring.svc.cluster.local:3100`
-   - Save & Test
-
-Now, you can use **Explore** in Grafana to view logs.
-
----
-
-## ✅ Verify
-
-Check that:
-- Promtail is running and sending logs.
-- Loki is storing them.
-- Grafana can display them.
-
----
-
-## 📂 Optional: Helm Values Customization
-
-You can customize Promtail's config:
-
+- **Password:** Run this to get it:
 ```bash
-helm show values grafana/promtail > promtail-values.yaml
+kubectl get secret prometheus-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
 ```
-
-Edit `promtail-values.yaml` to set `scrape_configs`, then install with:
-
-```bash
-helm upgrade --install promtail grafana/promtail \
-  --namespace monitoring -f promtail-values.yaml
-```
-
----
