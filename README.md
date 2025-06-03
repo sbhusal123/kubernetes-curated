@@ -12,6 +12,7 @@
 
 ## Concepts:
 - [Affinity](./Curated%20Reference/Concepts/Affinity.md)
+- [Liveness and Readiness Probe](./Curated%20Reference/Concepts/LivelinessAndReadiness.md)
 
 ## Configuration:
 - [Configuring Selenium Grid](./Curated%20Reference/Configuration/SeleniumGrid.md)
