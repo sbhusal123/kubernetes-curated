@@ -99,23 +99,44 @@ resources:
 ## 2. Liveness & Readiness Probes
 
 ```yaml
-livenessProbe:
-  httpGet:
-    path: /status
-    port: 5555
-readinessProbe:
-  httpGet:
-    path: /status
-    port: 5555
+  livenessProbe:
+    httpGet:
+      path: /status
+      port: 5555
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /status
+      port: 5555
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    failureThreshold: 3
 ```
 
 ### 💡 Explanation:
 
 - **Liveness Probe:** Checks if the container is healthy. If it fails, Kubernetes restarts the container.
 
+
+
 - **Readiness Probe:** Checks if the container is ready to serve traffic. If it fails, it's temporarily removed from service.
 
+
 - Important in Selenium nodes, since they may fail or become non-responsive during tests.
+
+**Terminologie:**
+
+- **Starts after:** ``initialDelaySeconds: 10`` → starts 10 seconds after the container begins running.
+
+- **Runs every:** ``periodSeconds: 5`` → runs every 5 seconds after the initial delay.
+
+- **Fails if:** failureThreshold: 3 → if 3 consecutive probes fail
+
+> **Readiness Probe:** Kubernetes waits 10 seconds, then probes every 5 seconds. If /status fails 3 times in a row, the pod is marked as Not Ready.
+
+>  **Liveness Probe:** Kubernetes waits 30 seconds, then probes every 10 seconds. If /status fails 3 times in a row, the container is restarted.
 
 ## 3. Affinity & Anti-Affinity
 
@@ -130,6 +151,22 @@ affinity:
               app: selenium-node-chrome
           topologyKey: "kubernetes.io/hostname"
 ```
+
+**preferredDuringSchedulingIgnoredDuringExecution:**
+- The scheduler will try to follow it but won’t block scheduling if it can’t.
+- If it can, it will try to spread out the pods.
+
+**weight=100**
+- The importance of this preference (from 1 to 100).
+- The scheduler uses the sum of weights to choose the best node when placing a new pod.
+- 100 means this preference is very strong, but still not mandatory.
+
+**topologyKey: "kubernetes.io/hostname"**
+- Defines the grouping of nodes for affinity/anti-affinity.
+- Here, it's "kubernetes.io/hostname" which means the rule is applied per node.
+- So, avoid putting two selenium-node-chrome pods on the same node.
+
+
 
 ### Explanation:
 
@@ -149,7 +186,7 @@ securityContext:
 ```
 
 ### Explanation:
-- Runs containers as a non-root user (UID 1000), a **Kubernetes security best practice.**
+- Runs containers as a non-root user (UID 1000) and file system user group 1000, a **Kubernetes security best practice.** 
 
 - Prevents privilege escalation if the container is compromised.
 

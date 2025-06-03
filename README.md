@@ -1,4 +1,4 @@
-# Kubernetes Curated Reference:
+## Kubernetes Curated Reference:
 
 - [How To Write and Understand YAML](./HowtoWriteYaml.md)
 
@@ -10,7 +10,10 @@
 
 - [Using PersistentVolumes With Minikube](./Curated%20Reference/Using%20Volumes%20From%20Host.md)
 
-## Condiguration:
+## Concepts:
+- [Affinity](./Curated%20Reference/Concepts/Affinity.md)
+
+## Configuration:
 - [Configuring Selenium Grid](./Curated%20Reference/Configuration/SeleniumGrid.md)
     - Resource Request And Limits
     - Liveness & Readiness Probes
