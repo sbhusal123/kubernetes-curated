@@ -3,48 +3,8 @@
 - A way to control how Pods are scheduled.
 - Allows to express preferences or requirements about where a Pod should (or should not) run, based on labels assigned to nodes or other pods.
 
-## 1. Basic Idea:
 
-**Say you have three nodes:**
-- node-A
-- node-B
-- node-C
-
-And you already have a pod ``frontend`` running on node-A.
-
-
-Now you create a new pod with Pod Anti-Affinity like:
-
-```yaml
-affinity:
-  podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchLabels:
-            app: frontend
-        topologyKey: "kubernetes.io/hostname"
-```
-
-### 🔄 What happens during scheduling?
-
-Kubernetes looks at all nodes and asks:
-
-- Does any node already have a pod with app=frontend?
-
-If yes:
-
-- That node (e.g., node-A) is excluded due to anti-affinity.
-
-If no:
-
-- The pod can be scheduled there.
-
-So here, node-A already has a frontend pod → skip.
-
-Kubernetes considers other nodes (node-B, node-C) for scheduling.
-
-
-## 2. Two Types
+## 1. Two Types
 
 ### 🔷 i. Node Affinity (for Nodes)
 
@@ -115,6 +75,46 @@ affinity:
 ```
 
 This will not schedule this pod on a node that already has a pod with app=frontend.
+
+## 2. Example Use Case:
+
+**Say you have three nodes:**
+- node-A
+- node-B
+- node-C
+
+And you already have a pod ``frontend`` running on node-A.
+
+
+Now you create a new pod with Pod Anti-Affinity like:
+
+```yaml
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app: frontend
+        topologyKey: "kubernetes.io/hostname"
+```
+
+### 🔄 What happens during scheduling?
+
+Kubernetes looks at all nodes and asks:
+
+- Does any node already have a pod with app=frontend?
+
+If yes:
+
+- That node (e.g., node-A) is excluded due to anti-affinity.
+
+If no:
+
+- The pod can be scheduled there.
+
+So here, node-A already has a frontend pod → skip.
+
+Kubernetes considers other nodes (node-B, node-C) for scheduling.
 
 
 ## 3. 🔧 Topology Key
