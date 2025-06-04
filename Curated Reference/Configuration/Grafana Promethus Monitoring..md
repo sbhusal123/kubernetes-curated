@@ -55,3 +55,21 @@ Then open: http://localhost:3000
 ```bash
 kubectl get secret prometheus-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
 ```
+
+
+## Using On Deployment:
+
+- For monitoring pods from a deployment.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <deployment_name>
+  namespace: <namespace>
+  labels:
+    app: <selenium-node-chrome>
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "5555"
+```
